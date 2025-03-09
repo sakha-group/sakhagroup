@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakha Group</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar {
+            background: #007BFF;
+            padding: 10px;
+            text-align: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+        .navbar a:hover {
+            background: #0056b3;
+            border-radius: 5px;
+        }
+        .menu-icon {
+            display: none;
+            cursor: pointer;
+            color: white;
+            font-size: 24px;
+            padding: 10px;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background: #007BFF;
+                position: absolute;
+                top: 50px;
+                left: 0;
+                width: 100%;
+                text-align: left;
+            }
+            .nav-links a {
+                padding: 10px;
+                display: block;
+            }
+            .menu-icon {
+                display: block;
+            }
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            var nav = document.getElementById("nav-links");
+            if (nav.style.display === "flex") {
+                nav.style.display = "none";
+            } else {
+                nav.style.display = "flex";
+            }
+        }
+        
+        function fetchUserData() {
+            // Simulating fetching user data from a backend
+            document.getElementById("user-balance").innerText = "₹5,000";
+            document.getElementById("user-referrals").innerText = "10";
+            document.getElementById("user-commission").innerText = "₹2,000";
+        }
+        
+        function makePayment() {
+            var options = {
+                "key": "YOUR_RAZORPAY_KEY", 
+                "amount": 10000,
+                "currency": "INR",
+                "name": "Sakha Group",
+                "description": "Payment for Services",
+                "handler": function (response) {
+                    alert("Payment successful: " + response.razorpay_payment_id);
+                },
+                "theme": {
+                    "color": "#007BFF"
+                }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        }
+        
+        function generateReferralLink() {
+            var userId = Math.floor(Math.random() * 100000);
+            var referralLink = "https://sakhagroup.com/referral?user=" + userId;
+            document.getElementById("referral-link").innerText = referralLink;
+            document.getElementById("referral-link").href = referralLink;
+        }
+    </script>
+</head>
+<body onload="fetchUserData()">
+    <div class="navbar">
+        <span class="menu-icon" onclick="toggleMenu()">☰</span>
+        <div class="nav-links" id="nav-links">
+            <a href="#services">Services</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#admin">Admin Panel</a>
+            <a href="#referral">Referral</a>
+            <a href="#payment">Payments</a>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Welcome to Sakha Group</h1>
+        <p>Start earning by promoting financial products.</p>
+        <a href="#" class="button">Get Started</a>
+        
+        <div class="user-dashboard" id="dashboard">
+            <h2>User Dashboard</h2>
+            <p>Balance: <span id="user-balance">Loading...</span></p>
+            <p>Referrals: <span id="user-referrals">Loading...</span></p>
+            <p>Commission Earned: <span id="user-commission">Loading...</span></p>
+        </div>
+        
+        <div class="admin-panel" id="admin">
+            <h2>Admin Panel</h2>
+            <p>Manage users, transactions, and products.</p>
+            <button onclick="approveTransaction()">Approve Transaction</button>
+            <button onclick="manageUsers()">Manage Users</button>
+            <button onclick="modifyProducts()">Modify Products</button>
+        </div>
+        
+        <div class="referral-system" id="referral">
+            <h2>Referral System</h2>
+            <p>Share your unique referral link to earn rewards:</p>
+            <button onclick="generateReferralLink()">Generate Referral Link</button>
+            <p><a id="referral-link" href="#" target="_blank"></a></p>
+        </div>
+        
+        <div class="payment-system" id="payment">
+            <h2>Payment Integration</h2>
+            <p>Secure payments via Razorpay, Stripe, and PayPal.</p>
+            <button onclick="makePayment()">Pay with Razorpay</button>
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                <input type="hidden" name="cmd" value="_s-xclick">
+                <input type="hidden" name="hosted_button_id" value="YOUR_PAYPAL_BUTTON_ID">
+                <input type="submit" value="Pay with PayPal">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
